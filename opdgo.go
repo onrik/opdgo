@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	version        = "0.2.0"
+	version        = "0.2.1"
 	defaultURL     = "https://api.openpanel.dev"
 	defaultTimeout = 1 * time.Second
 )
@@ -28,8 +28,8 @@ func (p *Payload) Add(properties map[string]any) {
 }
 
 type Request struct {
-	Type    string
-	Payload Payload
+	Type    string  `json:"type,omitempty"`
+	Payload Payload `json:"payload,omitempty"`
 }
 
 type Client struct {
@@ -58,6 +58,8 @@ func New(clientID, clientSecret string, options Options) *Client {
 		}
 	}
 
+	options.Logger.Debug("[opdgo] Create client", "id", clientID, "options", options)
+
 	return &Client{
 		baseURL: options.ApiURL,
 		id:      clientID,
@@ -81,6 +83,10 @@ func (c *Client) ClearGlobal() {
 }
 
 func (c *Client) do(requestType, action string, properties map[string]any) {
+	if c == nil {
+		return
+	}
+
 	payload := Payload{
 		Name:       action,
 		ProfileID:  c.profileID,
