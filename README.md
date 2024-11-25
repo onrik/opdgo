@@ -6,7 +6,9 @@
 Golang client for [OpenPanel.dev](https://openpanel.dev) 
 
 
-### Usage
+## Usage
+
+### Local client
 ```go
 package main
 
@@ -20,6 +22,30 @@ func main() {
     client := opdgo.New("<client_id>", "<client_secret>", nil)
 
     client.Track("purchase_completed", {
+        "product_id": "123",
+        "price": 99.99,
+        "currency": "USD"
+    })
+}
+
+```
+
+### Global client
+```go
+package main
+
+import (
+    "log"
+	
+    "github.com/onrik/opdgo"
+)
+
+func main() {
+    opdgo.Init(
+        opdgo.New("<client_id>", "<client_secret>", nil),
+    )
+
+    opdgo.Track("purchase_completed", {
         "product_id": "123",
         "price": 99.99,
         "currency": "USD"
